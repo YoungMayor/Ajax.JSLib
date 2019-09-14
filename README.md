@@ -17,9 +17,11 @@ The fifth parameter is the callback to be executed after the request is complete
 Code samples
 
 *****
+<code>
 var params = "name="+encodeURIComponent("My Name");
 params += "&country="+encodeURIComponent("My Country");
 sendxhr(params, "serversidescript.php", "JSON", "POST", function(response){
   // callback function actions
 });
+</code>
 *****
