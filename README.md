@@ -24,3 +24,7 @@ Code samples
   // callback function actions
 });
 </code></pre>
+
+
+ * @version 2.1 
+This update now accepts a sixth parameter which is a function to be executed if an error is experienced in retrieving completing the ajax request 
