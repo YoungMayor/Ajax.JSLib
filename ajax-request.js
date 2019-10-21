@@ -54,8 +54,11 @@ function getActivatedObjected(e) {
  *
  * 1.2
  *  Provision for network unavailability error handling, using a custom __treatXHRError() function or the default alert
+ *
+ * 2.1
+ *  Now connection error can be handled with a custom error passed to the call of this function as its 6 parameter
  */
-function sendxhr(params, url, restype, method, callback) {
+function sendxhr(params, url, restype, method, callback, xhrError) {
   if (typeof (restype) === "undefined") {
     restype = "HTML";
   }
@@ -71,6 +74,8 @@ function sendxhr(params, url, restype, method, callback) {
   request.onerror = function(){
     if (typeof(__treatXHRError) === "function"){
       __treatXHRError(request);
+    }else if (typeof(xhrError) === "function"){
+      xhrError();
     }else{
       alert("oops! seems you are offline, please check your connection and try again... Thanks");
     }
@@ -118,17 +123,20 @@ function sendxhr(params, url, restype, method, callback) {
  * A parameter should be passed to the function and that is
  * the response from the request
  */
-function sendForm(params, url, callback) {
+function sendForm(params, url, callback, xhrError) {
   var request = new ajaxRequest();
 
   request.open("POST", url, true);
   request.onerror = function(){
-    if (typeof(__treatXHRError) == "function"){
+    if (typeof(__treatXHRError) === "function"){
       __treatXHRError(request);
+    }else if (typeof(xhrError) === "function"){
+      xhrError();
     }else{
       alert("oops! seems you are offline, please check your connection and try again... Thanks");
     }
   };
+
   request.onreadystatechange = function () {
     if (this.readyState === 4) {
       if (this.status === 200) {
