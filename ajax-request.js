@@ -1,3 +1,24 @@
+/*******************************************************************************
+ * @author Mayor Technology
+ * @version 1.2
+ * @requires requires the above defined ajaxRequest Function
+ *
+ * CHANGELOG
+ * 1.1
+ *  Send XmlHTTPRequests
+ *  Treat JSON, XML and HTML response by a custom optional callback function
+ *
+ * 1.2
+ *  Provision for network unavailability error handling, using a custom __treatXHRError() function or the default alert
+ *
+ * 2.1
+ *  Now connection error can be handled with a custom error passed to the call of this function as its 6 parameter
+ *
+ * 2.2
+ *  A minor fix to error handling
+ *  Documentation update
+ ******************************************************************************/
+
 function ajaxRequest() {
   try {
     var request = new XMLHttpRequest();
@@ -42,21 +63,10 @@ function getActivatedObjected(e) {
  * aftter the request has been received.
  * A parameter should be passed to the function and that is
  * the response from the request
- *
- * @author Mayor Technology
- * @version 1.2
- * @requires requires the above defined ajaxRequest Function
- *
- * CHANGELOG
- * 1.1
- *  Send XmlHTTPRequests
- *  Treat JSON, XML and HTML response by a custom optional callback function
- *
- * 1.2
- *  Provision for network unavailability error handling, using a custom __treatXHRError() function or the default alert
- *
- * 2.1
- *  Now connection error can be handled with a custom error passed to the call of this function as its 6 parameter
+ * @param {function} xhrErrorFunc The alternate callback function to execute if an error
+ * occurs with the request, this is optional and if it is ignored then the
+ * __treatxhrError() is executed if defined, else an alert notifying the user is
+ * sent.
  */
 function sendxhr(params, url, restype, method, callback, xhrError) {
   if (typeof (restype) === "undefined") {
@@ -72,10 +82,10 @@ function sendxhr(params, url, restype, method, callback, xhrError) {
   request.open(method, url, true);
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   request.onerror = function(){
-    if (typeof(__treatXHRError) === "function"){
-      __treatXHRError(request);
-    }else if (typeof(xhrError) === "function"){
+    if (typeof(xhrError) === "function"){
       xhrError();
+    }else if (typeof(__treatXHRError) === "function"){
+      __treatXHRError();
     }else{
       alert("oops! seems you are offline, please check your connection and try again... Thanks");
     }
@@ -114,24 +124,24 @@ function sendxhr(params, url, restype, method, callback, xhrError) {
  *
  * @param {string} params the HTTP query to be sent
  * @param {string} url the URL to send the request to
- * @param {string} restype the type of response to get
- * if HTML, JSON or XML
- * @param {string} method the method of the request if
- * GET or POST
  * @param {function} callback The call back function to execute
  * aftter the request has been received.
  * A parameter should be passed to the function and that is
  * the response from the request
+ * @param {function} xhrErrorFunc The alternate callback function to execute if an error
+ * occurs with the request, this is optional and if it is ignored then the
+ * __treatxhrError() is executed if defined, else an alert notifying the user is
+ * sent.
  */
 function sendForm(params, url, callback, xhrError) {
   var request = new ajaxRequest();
 
   request.open("POST", url, true);
   request.onerror = function(){
-    if (typeof(__treatXHRError) === "function"){
-      __treatXHRError(request);
-    }else if (typeof(xhrError) === "function"){
+    if (typeof(xhrError) === "function"){
       xhrError();
+    }else if (typeof(__treatXHRError) === "function"){
+      __treatXHRError();
     }else{
       alert("oops! seems you are offline, please check your connection and try again... Thanks");
     }
